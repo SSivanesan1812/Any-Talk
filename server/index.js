@@ -1,5 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
+import authRouter from './routes/auth.route.js'
+import  connectMongoDb  from './db/connectMongoDB.js'
 
 const app=express()
 dotenv.config()
@@ -11,4 +13,9 @@ app.get('/',(req,res)=>{
     res.send("gi")
 })
 
-app.listen(port,()=>console.log(`server is running on port ${port}`))
+app.use('/api/auth',authRouter)
+
+app.listen(port,()=>{
+    connectMongoDb()
+    console.log(`server is running on port ${port}`)
+})
