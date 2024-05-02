@@ -1,5 +1,6 @@
 import User from "../models/user.js"
 import bcrypt from 'bcryptjs'
+import generateTokenAndSetCookie from "../utils/generateToken.js"
 
 export const signIn=async(req,res)=>{
     res.send("Sign In")
@@ -31,6 +32,8 @@ export const signUp=async(req,res)=>{
             profilePic:gender==="male"?profilepicBoy:profilepicGirl
         })
         if(newUser){
+
+            generateTokenAndSetCookie(newUser._id,res);
             await newUser.save()
         res.status(200).json(
             {
