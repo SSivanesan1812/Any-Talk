@@ -1,9 +1,21 @@
-import User from "../models/user.js"
+import User from "../models/user.model.js"
 import bcrypt from 'bcryptjs'
 import generateTokenAndSetCookie from "../utils/generateToken.js"
 
 export const signIn=async(req,res)=>{
-    res.send("Sign In")
+    try {
+        const {username,password}=req.body;
+        const user=User.findOne({username})
+        const isPasswordCheck=bcrypt.compare(password,user.password)||""
+        if(!user || !isPasswordCheck){
+            return res.status(400).json("Username or password do not match")
+        }
+        generateTokenAndSetCookie(user._id,res);
+        return res.status(200).json("Login successfull")
+    } catch (error) {
+        console.log("Error in sign-in controller",error.message)
+        return res.status(500).json({error:"Internal Server error"})
+    }
 }
 
 export const signUp=async(req,res)=>{
@@ -53,8 +65,8 @@ export const signUp=async(req,res)=>{
         
         
     } catch (error) {
-        console.log(error.message)
-        console.log(error);
+        console.log("Error in signUp controller",error.message)
+        
         return res.status(500).json({error:"Internal Server error"})
     }
 
@@ -62,5 +74,12 @@ export const signUp=async(req,res)=>{
 }
 
 export const signOut=async(req,res)=>{
-    res.send("sign Out")
+    try {
+        res.cookie("jwt","",{maxAge:0});
+        return res.status(400).json("Logout Successfull")
+        
+    } catch (error) {
+        console.log("Error in logout controller",error.message)
+        return res.status(500).json({error:"Internal Server error"})
+    }
 }
