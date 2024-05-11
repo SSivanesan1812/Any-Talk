@@ -17,5 +17,5 @@ const conversatinSchema=mongoose.Schema({
     ]
 },{timestamps:true})
 
-const conversatinon=mongoose.model("Conversation",conversatinSchema)
-export default conversatinon;
+const Conversation=mongoose.model("Conversation",conversatinSchema)
+export default Conversation;
